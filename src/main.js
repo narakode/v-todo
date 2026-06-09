@@ -4,9 +4,10 @@ import App from './App.vue';
 import vClickOutside from 'click-outside-vue3';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { router } from './core/router/router';
 
 const pinia = createPinia();
 
 pinia.use(piniaPluginPersistedstate);
 
-createApp(App).use(pinia).use(vClickOutside).mount('#app');
+createApp(App).use(router).use(pinia).use(vClickOutside).mount('#app');
