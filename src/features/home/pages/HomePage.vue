@@ -4,6 +4,8 @@ import { Icon } from '@iconify/vue';
 import { useTodoStore } from '../../../todo.store';
 import { storeToRefs } from 'pinia';
 import BaseCard from '../../../components/base/BaseCard.vue';
+import BaseIconButton from '../../../components/base/BaseIconButton.vue';
+import { toggleDarkMode } from '../../../utils/theme';
 
 const todoStore = useTodoStore();
 
@@ -40,14 +42,6 @@ function onSaveEdit() {
   todos.value[editingIndex.value].name = editValue.value;
   editingIndex.value = null;
 }
-function onToggleDarkMode() {
-  localStorage.setItem(
-    'theme',
-    document.documentElement.classList.contains('dark') ? 'light' : 'dark',
-  );
-
-  document.documentElement.classList.toggle('dark');
-}
 </script>
 
 <template>
@@ -65,20 +59,16 @@ function onToggleDarkMode() {
           <h1 class="font-bold text-2xl tracking-tight">Todo</h1>
         </div>
         <div class="flex items-center gap-2">
-          <a
+          <BaseIconButton
+            title="Github Repository"
+            icon="ri:github-fill"
+            tag="a"
             href="https://github.com/ibrahimalanshor/v-todo"
-            class="block w-10 h-10 border border-neutral-200 text-neutral-900 rounded-full flex items-center justify-center transition hover:bg-black hover:border-black hover:text-white dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-400 dark:hover:border-neutral-800 dark:hover:bg-neutral-800"
-          >
-            <Icon icon="ri:github-fill" class="size-6" />
-          </a>
-          <button
-            title="Toggle Dark Mode"
-            class="block w-10 h-10 border border-neutral-200 text-neutral-900 rounded-full flex items-center justify-center transition hover:bg-black hover:border-black hover:text-white dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-400 dark:hover:border-neutral-800 dark:hover:bg-neutral-800"
-            @click="onToggleDarkMode"
-          >
+          />
+          <BaseIconButton title="Toggle Dark Mode" @click="toggleDarkMode">
             <Icon icon="ri:moon-fill" class="size-5 dark:hidden" />
             <Icon icon="ri:sun-fill" class="size-5 hidden dark:block" />
-          </button>
+          </BaseIconButton>
         </div>
       </div>
       <div

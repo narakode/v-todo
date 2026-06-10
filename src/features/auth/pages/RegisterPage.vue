@@ -13,7 +13,7 @@ import { toggleDarkMode } from '../../../utils/theme';
 import { Icon } from '@iconify/vue';
 
 const router = useRouter();
-const { login } = useAuth();
+const { register } = useAuth();
 
 const form = reactive({
   email: null,
@@ -26,7 +26,7 @@ async function onSubmit() {
   loading.value = true;
   errorMessage.value = null;
 
-  const { error } = await login(form);
+  const { error } = await register(form);
 
   if (error) {
     errorMessage.value = error;
@@ -40,7 +40,7 @@ async function onSubmit() {
 
 <template>
   <div class="h-full flex flex-col gap-6 items-center justify-center">
-    <BaseCard title="Masuk untuk Melanjutkan" class="w-full max-w-md space-y-6">
+    <BaseCard title="Buat Akun Baru" class="w-full max-w-md space-y-6">
       <BaseAlert v-if="errorMessage">
         {{ errorMessage }}
       </BaseAlert>
@@ -70,9 +70,9 @@ async function onSubmit() {
         <BaseButton :loading="loading" type="submit"> Masuk </BaseButton>
       </form>
       <p class="text-center text-base text-neutral-600 dark:text-neutral-400">
-        Belum punya akun?
-        <BaseLink tag="router-link" :to="{ name: 'register' }">
-          Daftar sekarang
+        Sudah punya akun?
+        <BaseLink tag="router-link" :to="{ name: 'login' }">
+          Masuk sekarang
         </BaseLink>
       </p>
     </BaseCard>

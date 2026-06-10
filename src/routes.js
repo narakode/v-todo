@@ -15,4 +15,12 @@ export const routes = [
       guest: true,
     },
   },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('./features/auth/pages/RegisterPage.vue'),
+    meta: {
+      guest: true,
+    },
+  },
 ];

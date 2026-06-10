@@ -25,5 +25,18 @@ export function useAuth() {
     return createSucces(data);
   }
 
-  return { checkLoggedIn, login };
+  async function register(credentials) {
+    const { data, error } = await supabase.auth.signUp(credentials);
+
+    if (error) {
+      return createError(
+        error.code === 'user_already_exists'
+          ? 'Email sudah digunakan, masuk atau gunakan email lain.'
+          : 'Registrasi gagal, coba lagi',
+      );
+    }
+
+    return createSucces(data);
+  }
+  return { checkLoggedIn, login, register };
 }
