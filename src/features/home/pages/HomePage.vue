@@ -51,8 +51,8 @@ function onToggleDarkMode() {
 </script>
 
 <template>
-  <div class="h-full flex items-center px-4 py-4 sm:py-10 lg:py-20">
-    <BaseCard class="max-w-md w-full mx-auto">
+  <div class="h-full flex items-center py-4 sm:py-10 lg:py-20">
+    <BaseCard class="max-w-md w-full mx-auto" paddless>
       <div
         class="p-6 border-b border-neutral-100 flex items-center justify-between dark:border-neutral-800"
       >

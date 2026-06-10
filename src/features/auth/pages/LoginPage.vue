@@ -1,28 +1,71 @@
 <script setup>
+import { reactive, ref } from 'vue';
 import BaseButton from '../../../components/base/BaseButton.vue';
 import BaseCard from '../../../components/base/BaseCard.vue';
 import BaseFormItem from '../../../components/base/BaseFormItem.vue';
 import BaseInput from '../../../components/base/BaseInput.vue';
 import BaseLink from '../../../components/base/BaseLink.vue';
+import { useAuth } from '../../../core/auth/auth.compose';
+import BaseAlert from '../../../components/base/BaseAlert.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const { login } = useAuth();
+
+const form = reactive({
+  email: null,
+  password: null,
+});
+const loading = ref(false);
+const errorMessage = ref(null);
+
+async function onSubmit() {
+  loading.value = true;
+  errorMessage.value = null;
+
+  const { error } = await login(form);
+
+  if (error) {
+    errorMessage.value = error;
+  } else {
+    router.push({ name: 'home' });
+  }
+
+  loading.value = false;
+}
 </script>
 
 <template>
   <div class="h-full flex items-center justify-center">
-    <BaseCard title="Masuk untuk Melanjutkan" class="min-w-md p-6 space-y-4">
-      <BaseFormItem label="Email" v-slot="id">
-        <BaseInput
-          type="email"
-          :id="id"
-          placeholder="jhon@gmail.com"
-          required
-        />
-      </BaseFormItem>
+    <BaseCard title="Masuk untuk Melanjutkan" class="w-full max-w-md space-y-6">
+      <BaseAlert v-if="errorMessage">
+        {{ errorMessage }}
+      </BaseAlert>
+      <form class="space-y-4" @submit.prevent="onSubmit">
+        <BaseFormItem label="Email" v-slot="id">
+          <BaseInput
+            type="email"
+            name="email"
+            :id="id"
+            placeholder="jhon@gmail.com"
+            required
+            v-model="form.email"
+          />
+        </BaseFormItem>
 
-      <BaseFormItem label="Password" v-slot="id">
-        <BaseInput type="password" :id="id" placeholder="••••••••" required />
-      </BaseFormItem>
+        <BaseFormItem label="Password" v-slot="id">
+          <BaseInput
+            type="password"
+            name="password"
+            :id="id"
+            placeholder="••••••••"
+            required
+            v-model="form.password"
+          />
+        </BaseFormItem>
 
-      <BaseButton type="submit"> Masuk </BaseButton>
+        <BaseButton :loading="loading" type="submit"> Masuk </BaseButton>
+      </form>
       <p class="text-center text-base text-neutral-600 dark:text-neutral-400">
         Belum punya akun?
         <BaseLink href="#"> Daftar sekarang </BaseLink>
