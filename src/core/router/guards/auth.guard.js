@@ -1,4 +1,4 @@
-import { useAuth } from '../auth/auth.compose';
+import { useAuth } from '../../auth/auth.compose';
 
 export const authGuard = async (to) => {
   const { checkLoggedIn } = useAuth();
