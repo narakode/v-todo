@@ -1,58 +1,31 @@
 <script setup>
+import BaseButton from '../../../components/base/BaseButton.vue';
 import BaseCard from '../../../components/base/BaseCard.vue';
+import BaseFormItem from '../../../components/base/BaseFormItem.vue';
+import BaseInput from '../../../components/base/BaseInput.vue';
+import BaseLink from '../../../components/base/BaseLink.vue';
 </script>
 
 <template>
   <div class="h-full flex items-center justify-center">
-    <BaseCard class="min-w-md p-6 space-y-4">
-      <h2 class="font-bold text-2xl tracking-tight">Masuk Dengan</h2>
-
-      <div class="mb-4">
-        <label
-          for="email-address"
-          class="block mb-2 text-base font-medium text-neutral-700 dark:text-white"
-        >
-          Alamat Email
-        </label>
-        <input
+    <BaseCard title="Masuk untuk Melanjutkan" class="min-w-md p-6 space-y-4">
+      <BaseFormItem label="Email" v-slot="id">
+        <BaseInput
           type="email"
-          id="email-address"
-          class="h-13 px-5 w-full border border-transparent rounded-2xl bg-neutral-50 transition placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:border-neutral-300 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-800 dark:focus:border-neutral-600 dark:text-white"
+          :id="id"
           placeholder="jhon@gmail.com"
           required
         />
-      </div>
+      </BaseFormItem>
 
-      <div class="mb-4">
-        <label
-          for="password"
-          class="block mb-2 text-base font-medium text-neutral-700 dark:text-white"
-        >
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          class="h-13 px-5 w-full border border-transparent rounded-2xl bg-neutral-50 transition placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:border-neutral-300 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-800 dark:focus:border-neutral-600 dark:text-white"
-          placeholder="••••••••"
-          required
-        />
-      </div>
+      <BaseFormItem label="Password" v-slot="id">
+        <BaseInput type="password" :id="id" placeholder="••••••••" required />
+      </BaseFormItem>
 
-      <button
-        type="submit"
-        class="h-13 px-5 w-full flex items-center justify-center rounded-2xl bg-neutral-900 text-white font-medium text-base transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 dark:focus:ring-white dark:focus:ring-offset-neutral-900"
-      >
-        Masuk
-      </button>
+      <BaseButton type="submit"> Masuk </BaseButton>
       <p class="text-center text-base text-neutral-600 dark:text-neutral-400">
         Belum punya akun?
-        <a
-          href="#"
-          class="font-medium text-neutral-900 hover:underline dark:text-white transition"
-        >
-          Daftar sekarang
-        </a>
+        <BaseLink href="#"> Daftar sekarang </BaseLink>
       </p>
     </BaseCard>
   </div>
