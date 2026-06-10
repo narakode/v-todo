@@ -7,4 +7,12 @@ export const routes = [
       auth: true,
     },
   },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('./features/auth/pages/LoginPage.vue'),
+    meta: {
+      guest: true,
+    },
+  },
 ];

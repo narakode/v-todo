@@ -3,6 +3,7 @@ import { ref, useTemplateRef, nextTick } from 'vue';
 import { Icon } from '@iconify/vue';
 import { useTodoStore } from '../../../todo.store';
 import { storeToRefs } from 'pinia';
+import BaseCard from '../../../components/base/BaseCard.vue';
 
 const todoStore = useTodoStore();
 
@@ -50,12 +51,8 @@ function onToggleDarkMode() {
 </script>
 
 <template>
-  <div
-    class="bg-neutral-50 text-neutral-900 min-h-screen flex items-center px-4 py-4 sm:py-10 lg:py-20 dark:bg-black"
-  >
-    <div
-      class="max-w-md w-full mx-auto bg-white border border-neutral-200 rounded-3xl dark:bg-neutral-900 dark:border-neutral-800"
-    >
+  <div class="h-full flex items-center px-4 py-4 sm:py-10 lg:py-20">
+    <BaseCard class="max-w-md w-full mx-auto">
       <div
         class="p-6 border-b border-neutral-100 flex items-center justify-between dark:border-neutral-800"
       >
@@ -65,11 +62,7 @@ function onToggleDarkMode() {
           >
             Activities
           </p>
-          <h1
-            class="font-bold text-neutral-900 text-2xl tracking-tight dark:text-white"
-          >
-            Todo
-          </h1>
+          <h1 class="font-bold text-2xl tracking-tight">Todo</h1>
         </div>
         <div class="flex items-center gap-2">
           <a
@@ -192,6 +185,6 @@ function onToggleDarkMode() {
           v-model="newTodo"
         />
       </form>
-    </div>
+    </BaseCard>
   </div>
 </template>
