@@ -18,9 +18,10 @@ setUser();
 </script>
 
 <template>
-  <component :is="route.meta.layout || 'div'">
-    <router-view
-      class="bg-neutral-50 text-neutral-900 min-h-screen px-4 dark:bg-black"
-    />
+  <component
+    :is="route.meta.layout || 'div'"
+    class="bg-neutral-50 text-neutral-900 min-h-screen px-4 dark:bg-black"
+  >
+    <router-view />
   </component>
 </template>

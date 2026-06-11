@@ -12,9 +12,14 @@ import { Icon } from '@iconify/vue';
         title="Github Repository"
         icon="ri:github-fill"
         tag="a"
+        :bordered="false"
         href="https://github.com/ibrahimalanshor/v-todo"
       />
-      <BaseIconButton title="Toggle Dark Mode" @click="toggleDarkMode">
+      <BaseIconButton
+        :bordered="false"
+        title="Toggle Dark Mode"
+        @click="toggleDarkMode"
+      >
         <Icon icon="ri:moon-fill" class="size-5 dark:hidden" />
         <Icon icon="ri:sun-fill" class="size-5 hidden dark:block" />
       </BaseIconButton>

@@ -54,5 +54,9 @@ export function useAuth() {
     return true;
   }
 
-  return { checkLoggedIn, login, register, setUser };
+  async function logout() {
+    await supabase.auth.signOut();
+  }
+
+  return { checkLoggedIn, login, register, setUser, logout };
 }
