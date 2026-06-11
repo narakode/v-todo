@@ -1,9 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuth } from './core/auth/auth.compose';
 
 const { setUser: setAuthuser, checkLoggedIn } = useAuth();
 const router = useRouter();
+const route = useRoute();
 
 async function setUser() {
   if (await checkLoggedIn()) {
@@ -17,7 +18,10 @@ setUser();
 </script>
 
 <template>
-  <router-view
+  <component
+    :is="route.meta.layout || 'div'"
     class="bg-neutral-50 text-neutral-900 min-h-screen px-4 dark:bg-black"
-  />
+  >
+    <router-view />
+  </component>
 </template>

@@ -13,6 +13,7 @@ export const routes = [
     component: () => import('./features/auth/pages/LoginPage.vue'),
     meta: {
       guest: true,
+      layout: 'LayoutAuth',
     },
   },
   {
@@ -21,6 +22,7 @@ export const routes = [
     component: () => import('./features/auth/pages/RegisterPage.vue'),
     meta: {
       guest: true,
+      layout: 'LayoutAuth',
     },
   },
 ];
