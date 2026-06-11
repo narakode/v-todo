@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.108.1",
     "@tailwindcss/vite": "^4.1.18",
     "click-outside-vue3": "^4.0.1",
+    "floating-vue": "^5.2.2",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "tailwindcss": "^4.1.18",
