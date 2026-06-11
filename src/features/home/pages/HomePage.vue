@@ -1,167 +1,124 @@
 <script setup>
-import { ref, useTemplateRef, nextTick } from 'vue';
 import { Icon } from '@iconify/vue';
-import { useTodoStore } from '../../../todo.store';
-import { storeToRefs } from 'pinia';
-import BaseCard from '../../../components/base/BaseCard.vue';
 import AppNavbar from '../../../components/app/AppNavbar.vue';
+import BaseCard from '../../../components/base/BaseCard.vue';
+import BaseState from '../../../components/base/BaseState.vue';
 
-const todoStore = useTodoStore();
-
-const { todos } = storeToRefs(todoStore);
-
-const newTodo = ref(null);
-const editingIndex = ref(null);
-const editValue = ref(null);
-const editInput = useTemplateRef('editInput');
-const saveEditButton = useTemplateRef('saveEditButton');
-
-function onSave() {
-  todoStore.create(newTodo.value);
-
-  newTodo.value = null;
-}
-function onRemove(index) {
-  todoStore.remove(index);
-}
-async function onOpenEditing(index) {
-  editingIndex.value = index;
-  editValue.value = todos.value[index].name;
-
-  await nextTick();
-
-  editInput.value[0].focus();
-}
-function onCloseEditing(e) {
-  if (!saveEditButton.value[0].contains(e.target)) {
-    editingIndex.value = false;
-  }
-}
-function onSaveEdit() {
-  todos.value[editingIndex.value].name = editValue.value;
-  editingIndex.value = null;
-}
+const cards = [
+  {
+    name: 'Daily Todo',
+    tasks: [
+      {
+        id: 1,
+        name: 'Check email',
+      },
+      {
+        id: 2,
+        name: 'Review pull request',
+      },
+    ],
+  },
+  {
+    name: 'Shopping List',
+    tasks: [
+      {
+        id: 3,
+        name: 'Buy milk',
+      },
+      {
+        id: 4,
+        name: 'Buy eggs',
+      },
+    ],
+  },
+  {
+    name: 'Todo Project',
+    tasks: [],
+  },
+  {
+    name: 'Learning Goals',
+    tasks: [
+      {
+        id: 5,
+        name: 'Study Vue 3',
+      },
+      {
+        id: 6,
+        name: 'Read Laravel documentation',
+      },
+    ],
+  },
+];
 </script>
 
 <template>
   <div class="py-4 space-y-6">
     <AppNavbar />
-    <div class="h-full flex items-center sm:py-10 lg:py-20">
-      <BaseCard class="max-w-md w-full mx-auto" paddless>
-        <div
-          class="p-6 space-y-1 border-b border-neutral-100 dark:border-neutral-800"
-        >
-          <p
-            class="text-xs text-neutral-400 font-semibold tracking-wider uppercase dark:text-neutral-500"
-          >
-            Activities
-          </p>
-          <h1 class="font-bold text-2xl tracking-tight">Todo</h1>
-        </div>
-        <div
-          v-if="!todos.length"
-          class="p-4 text-center min-h-80 flex flex-col justify-center items-center gap-4"
-        >
-          <div
-            class="w-18 h-18 bg-neutral-50 rounded-full flex items-center justify-center dark:bg-neutral-800"
-          >
-            <Icon
-              icon="ri:checkbox-circle-line"
-              class="size-10 text-neutral-300 dark:text-neutral-600"
-            />
-          </div>
-          <div class="max-w-[200px]">
-            <h2 class="text-lg font-semibold text-neutral-900 dark:text-white">
-              All Done
-            </h2>
-            <p class="text-neutral-400 leading-relaxed dark:text-neutral-500">
-              No tasks for today, add some tasks below.
-            </p>
-          </div>
-        </div>
-        <div v-else class="p-4 space-y-1">
-          <div
-            v-for="(todo, index) of todos"
-            :key="todo.id"
-            :class="[
-              'p-3 rounded-xl transition flex items-center justify-between gap-3 transition',
-              todo.done ? 'bg-neutral-50/50 dark:bg-neutral-800/50' : '',
-            ]"
-          >
-            <div class="flex items-center gap-3 grow">
-              <label class="relative flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  class="appearance-none w-5 h-5 border-2 border-neutral-300 rounded-full peer transition cursor-pointer checked:bg-neutral-300 dark:border-neutral-600 dark:checked:bg-neutral-600"
-                  v-model="todos[index].done"
-                />
-                <Icon
-                  icon="ri:check-fill"
-                  class="hidden absolute top-1 left-1 size-3 text-white peer-checked:block dark:text-neutral-900"
-                />
-              </label>
-              <form
-                v-if="editingIndex === index"
-                id="editForm"
-                class="grow"
-                @submit.prevent="onSaveEdit"
-              >
-                <input
-                  ref="editInput"
+
+    <div
+      class="grid gap-4 items-start sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
+      <BaseCard
+        v-for="(card, index) in cards"
+        :key="index"
+        :title="card.name"
+        with-divider
+      >
+        <BaseState
+          v-if="!card.tasks.length"
+          class="p-4 min-h-60"
+          title="All Done"
+          icon="ri:checkbox-circle-line"
+          description="No tasks for today, add some tasks below."
+        />
+        <div v-else class="space-y-1">
+          <div class="p-4">
+            <div
+              v-for="task of card.tasks"
+              :key="task.id"
+              :class="[
+                'p-3 rounded-xl transition flex items-center justify-between gap-3 transition',
+                false ? 'bg-neutral-50/50 dark:bg-neutral-800/50' : '',
+              ]"
+            >
+              <div class="flex items-center gap-3 grow">
+                <label class="relative flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="appearance-none w-5 h-5 border-2 border-neutral-300 rounded-full peer transition cursor-pointer checked:bg-neutral-300 dark:border-neutral-600 dark:checked:bg-neutral-600"
+                  />
+                  <Icon
+                    icon="ri:check-fill"
+                    class="hidden absolute top-1 left-1 size-3 text-white peer-checked:block dark:text-neutral-900"
+                  />
+                </label>
+                <p
                   :class="[
-                    'w-full border-b border-neutral-300 pb-0.5 text-[1.05rem] focus:outline-none dark:border-neutral-700',
-                    todo.done
-                      ? 'text-neutral-400 dark:text-neutral-600'
+                    'font-medium',
+                    false
+                      ? 'text-neutral-400 line-through dark:text-neutral-600'
                       : 'text-neutral-700 dark:text-white',
                   ]"
-                  required
-                  v-model="editValue"
-                  v-click-outside="onCloseEditing"
-                />
-              </form>
-              <p
-                v-else
-                :class="[
-                  'font-medium',
-                  todo.done
-                    ? 'text-neutral-400 line-through dark:text-neutral-600'
-                    : 'text-neutral-700 dark:text-white',
-                ]"
-                @click="onOpenEditing(index)"
+                >
+                  {{ task.name }}
+                </p>
+              </div>
+              <button
+                class="cursor-pointer text-neutral-300 hover:text-red-500 dark:text-neutral-700 dark:hover:text-red-400"
               >
-                {{ todo.name }}
-              </p>
+                <Icon icon="ri:close-fill" class="size-5" />
+              </button>
             </div>
-            <button
-              v-if="editingIndex === index"
-              ref="saveEditButton"
-              class="cursor-pointer text-blue-500 dark:text-blue-400"
-              type="submit"
-              form="editForm"
-            >
-              <Icon icon="ri:check-fill" class="size-5" />
-            </button>
-            <button
-              v-else
-              class="cursor-pointer text-neutral-300 hover:text-red-500 dark:text-neutral-700 dark:hover:text-red-400"
-              @click="onRemove(index)"
-            >
-              <Icon icon="ri:close-fill" class="size-5" />
-            </button>
           </div>
+          <form class="p-6 border-t border-neutral-100 dark:border-neutral-800">
+            <input
+              type="text"
+              class="h-13 px-5 w-full border border-transparent rounded-2xl bg-neutral-50 transition placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:border-neutral-300 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-800 dark:focus:border-neutral-600 dark:text-white"
+              placeholder="Add new activities"
+              required
+            />
+          </form>
         </div>
-        <form
-          class="p-6 border-t border-neutral-100 dark:border-neutral-800"
-          @submit.prevent="onSave"
-        >
-          <input
-            type="text"
-            class="h-13 px-5 w-full border border-transparent rounded-2xl bg-neutral-50 transition placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:border-neutral-300 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-800 dark:focus:border-neutral-600 dark:text-white"
-            placeholder="Add new activities"
-            required
-            v-model="newTodo"
-          />
-        </form>
       </BaseCard>
     </div>
   </div>
