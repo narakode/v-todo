@@ -1,6 +1,9 @@
 import { useRouter } from 'vue-router';
 import { supabase } from '../supabase';
 import { createError, createSucces } from '../../utils/response';
+import { ref } from 'vue';
+
+const user = ref(null);
 
 export function useAuth() {
   const router = useRouter();
@@ -38,5 +41,18 @@ export function useAuth() {
 
     return createSucces(data);
   }
-  return { checkLoggedIn, login, register };
+
+  async function setUser() {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error || !data) {
+      return false;
+    }
+
+    user.value = data;
+
+    return true;
+  }
+
+  return { checkLoggedIn, login, register, setUser };
 }
