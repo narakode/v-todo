@@ -5,8 +5,9 @@ import BaseState from '../../../components/base/BaseState.vue';
 import BaseCheckbox from '../../../components/base/BaseCheckbox.vue';
 import BaseInput from '../../../components/base/BaseInput.vue';
 import { nextTick, reactive, ref, useTemplateRef } from 'vue';
+import { supabase } from '../../../core/supabase';
 
-defineProps({
+const props = defineProps({
   card: {
     type: Object,
     required: true,
@@ -22,6 +23,16 @@ const editTask = reactive({
   name: null,
 });
 
+async function loadTasks() {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select()
+    .eq('card_id', props.card.id);
+
+  if (!error) {
+    tasks.value = data;
+  }
+}
 async function onOpenEditing(index) {
   editTask.index = index;
   editTask.name = tasks.value[index].name;
@@ -35,19 +46,28 @@ function onCloseEditing(e) {
     editTask.index = null;
   }
 }
-function onCreate() {
-  tasks.value.push({
+async function onCreate() {
+  const task = {
     id: Date.now(),
     name: newTask.value,
     done: false,
-  });
+  };
+
+  tasks.value.push(task);
 
   newTask.value = null;
+
+  await supabase.from('tasks').insert({
+    name: task.name,
+    card_id: props.card.id,
+  });
 }
 function onSaveEdit() {
   tasks.value[editTask.index].name = editTask.name;
   editTask.index = null;
 }
+
+loadTasks();
 </script>
 
 <template>
