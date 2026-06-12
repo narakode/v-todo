@@ -1,5 +1,7 @@
 <script setup>
 import { Icon } from '@iconify/vue';
+
+const checked = defineModel();
 </script>
 
 <template>
@@ -7,6 +9,7 @@ import { Icon } from '@iconify/vue';
     <input
       type="checkbox"
       class="appearance-none w-5 h-5 border-2 border-neutral-300 rounded-full peer transition cursor-pointer checked:bg-neutral-300 dark:border-neutral-600 dark:checked:bg-neutral-600"
+      v-model="checked"
     />
     <Icon
       icon="ri:check-fill"
