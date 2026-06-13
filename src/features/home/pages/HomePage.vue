@@ -11,7 +11,10 @@ const chunkCards = computed(() => {
   const res = Array.from({ length: 4 }, () => []);
 
   cards.value.forEach((card, index) => {
-    res[index % 4].push(card);
+    res[index % 4].push({
+      index,
+      ...card,
+    });
   });
 
   return res;
@@ -56,7 +59,11 @@ loadCards();
       class="grid gap-4 items-start sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     >
       <div v-for="(chunk, index) in chunkCards" :key="index" class="space-y-4">
-        <CardCard v-for="(card, index) in chunk" :key="index" :card="card" />
+        <CardCard
+          v-for="(card, index) in chunk"
+          :key="index"
+          v-model="cards[card.index]"
+        />
       </div>
     </div>
   </div>

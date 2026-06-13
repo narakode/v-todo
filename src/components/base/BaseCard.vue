@@ -3,6 +3,7 @@ const props = defineProps({
   title: String,
   paddless: Boolean,
   withDivider: Boolean,
+  withHeader: Boolean,
 });
 </script>
 
@@ -14,10 +15,12 @@ const props = defineProps({
       withDivider ? 'divide-y divide-neutral-100 dark:divide-neutral-800' : '',
     ]"
   >
-    <header v-if="title" :class="[withDivider ? 'p-6' : '']">
-      <h2 v-if="title" class="font-bold text-2xl tracking-tight">
-        {{ title }}
-      </h2>
+    <header v-if="withHeader || title" :class="[withDivider ? 'p-6' : '']">
+      <slot name="header">
+        <h2 v-if="title" class="font-bold text-2xl tracking-tight">
+          {{ title }}
+        </h2>
+      </slot>
     </header>
     <slot />
     <footer v-if="$slots.footer" class="p-6">
