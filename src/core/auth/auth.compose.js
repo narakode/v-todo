@@ -25,11 +25,21 @@ export function useAuth() {
       );
     }
 
+    user.value = data;
+
     return createSucces(data);
   }
 
   async function register(credentials) {
-    const { data, error } = await supabase.auth.signUp(credentials);
+    const { data, error } = await supabase.auth.signUp({
+      email: credentials.email,
+      password: credentials.password,
+      options: {
+        data: {
+          name: credentials.name,
+        },
+      },
+    });
 
     if (error) {
       return createError(
@@ -38,6 +48,8 @@ export function useAuth() {
           : 'Registrasi gagal, coba lagi',
       );
     }
+
+    user.value = data;
 
     return createSucces(data);
   }
@@ -58,5 +70,5 @@ export function useAuth() {
     await supabase.auth.signOut();
   }
 
-  return { checkLoggedIn, login, register, setUser, logout };
+  return { checkLoggedIn, login, register, setUser, logout, user };
 }

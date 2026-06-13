@@ -9,7 +9,7 @@ import BaseDropdownItem from '../base/BaseDropdownItem.vue';
 
 defineEmits(['new-todo']);
 
-const { logout } = useAuth();
+const { logout, user } = useAuth();
 const router = useRouter();
 
 async function onLogout() {
@@ -52,6 +52,14 @@ async function onLogout() {
 
         <template #popper>
           <div class="min-w-48 p-1.5 flex flex-col">
+            <BaseDropdownItem :hover="false" class="font-semibold" tag="p">
+              {{
+                user.user.user_metadata?.name ?? user.user.user_metadata?.email
+              }}
+            </BaseDropdownItem>
+            <div
+              class="h-px bg-neutral-200 dark:bg-neutral-700 my-1 mx-2"
+            ></div>
             <BaseDropdownItem @click="onLogout"> Logout </BaseDropdownItem>
           </div>
         </template>
