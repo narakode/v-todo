@@ -8,6 +8,8 @@ import BaseLink from '../../../components/base/BaseLink.vue';
 import { useAuth } from '../../../core/auth/auth.compose';
 import BaseAlert from '../../../components/base/BaseAlert.vue';
 import { useRouter } from 'vue-router';
+import { supabase } from '../../../core/supabase';
+import GoogleLoginButton from '../components/GoogleLoginButton.vue';
 
 const router = useRouter();
 const { login } = useAuth();
@@ -65,6 +67,7 @@ async function onSubmit() {
 
       <BaseButton :loading="loading" type="submit"> Masuk </BaseButton>
     </form>
+    <GoogleLoginButton />
     <p class="text-center text-base text-neutral-600 dark:text-neutral-400">
       Belum punya akun?
       <BaseLink tag="router-link" :to="{ name: 'register' }">
