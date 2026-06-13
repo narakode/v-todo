@@ -5,6 +5,7 @@ import { toggleDarkMode } from '../../utils/theme';
 import { useAuth } from '../../core/auth/auth.compose';
 import { useRouter } from 'vue-router';
 import BaseButton from '../base/BaseButton.vue';
+import BaseDropdownItem from '../base/BaseDropdownItem.vue';
 
 defineEmits(['new-todo']);
 
@@ -50,15 +51,8 @@ async function onLogout() {
         />
 
         <template #popper>
-          <div
-            class="min-w-48 p-1.5 flex flex-col bg-white dark:bg-neutral-800"
-          >
-            <button
-              class="w-full text-left px-3 py-2 text-neutral-700 rounded-lg transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-700"
-              @click="onLogout"
-            >
-              Logout
-            </button>
+          <div class="min-w-48 p-1.5 flex flex-col">
+            <BaseDropdownItem @click="onLogout"> Logout </BaseDropdownItem>
           </div>
         </template>
       </VDropdown>

@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 import CardCard from '../../card/components/CardCard.vue';
 import BaseState from '../../../components/base/BaseState.vue';
 import { supabase } from '../../../core/supabase';
+import { hideAllPoppers } from 'floating-vue';
 
 const cards = ref([]);
 const chunkCards = computed(() => {
@@ -39,6 +40,13 @@ async function onNewCard() {
     name,
   });
 }
+async function onRemoveCard(task, index) {
+  cards.value.splice(index, 1);
+
+  hideAllPoppers();
+
+  await supabase.from('cards').delete().eq('id', task.id);
+}
 
 loadCards();
 </script>
@@ -63,6 +71,7 @@ loadCards();
           v-for="(card, index) in chunk"
           :key="index"
           v-model="cards[card.index]"
+          @delete="onRemoveCard(card, index)"
         />
       </div>
     </div>
