@@ -7,7 +7,11 @@ import BaseInput from '../../../components/base/BaseInput.vue';
 import { nextTick, reactive, ref, useTemplateRef } from 'vue';
 import { supabase } from '../../../core/supabase';
 import BaseInlineInput from '../../../components/base/BaseInlineInput.vue';
+import BaseIconButton from '../../../components/base/BaseIconButton.vue';
+import BaseDropdownItem from '../../../components/base/BaseDropdownItem.vue';
+import BaseButton from '../../../components/base/BaseButton.vue';
 
+defineEmits(['delete']);
 const card = defineModel();
 
 const tasks = ref([]);
@@ -144,13 +148,43 @@ loadTasks();
           <Icon icon="ri:check-fill" class="size-5" />
         </button>
       </form>
-      <h2
-        v-else
-        class="font-bold text-2xl tracking-tight"
-        @click="onOpenEditCard"
-      >
-        {{ card.name }}
-      </h2>
+      <div v-else class="flex items-center justify-between">
+        <h2 class="font-bold text-2xl tracking-tight" @click="onOpenEditCard">
+          {{ card.name }}
+        </h2>
+
+        <VDropdown placement="bottom-end">
+          <button
+            class="cursor-pointer text-neutral-300 hover:text-red-500 dark:text-neutral-700 dark:hover:text-red-400"
+          >
+            <Icon icon="ri:delete-bin-fill" class="size-5" />
+          </button>
+
+          <template #popper>
+            <div class="p-1.5">
+              <BaseDropdownItem class="space-y-2" :hover="false">
+                <p>Semua task akan ikut terhapus, lanjutkan?</p>
+                <div class="flex gap-1 justify-end">
+                  <BaseButton
+                    color="ghost"
+                    size="xs"
+                    :fullwidth="false"
+                    v-close-popper
+                    >Batal</BaseButton
+                  >
+                  <BaseButton
+                    color="ghost"
+                    size="xs"
+                    :fullwidth="false"
+                    @click="$emit('delete')"
+                    >Hapus</BaseButton
+                  >
+                </div>
+              </BaseDropdownItem>
+            </div>
+          </template>
+        </VDropdown>
+      </div>
     </template>
     <BaseState
       v-if="!tasks.length"
