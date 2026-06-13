@@ -23,13 +23,13 @@ async function onLogout() {
   <div class="flex items-center justify-between">
     <div class="flex items-center">
       <BaseButton icon="ri:add-fill" @click="$emit('new-todo')"
-        >Tambah Card</BaseButton
+        >Tambah Kartu</BaseButton
       >
     </div>
     <div class="flex items-center gap-2">
       <BaseIconButton
         :bordered="false"
-        title="Github Repository"
+        title="Repository Github"
         icon="ri:github-fill"
         tag="a"
         href="https://github.com/ibrahimalanshor/v-todo"
@@ -37,7 +37,7 @@ async function onLogout() {
 
       <BaseIconButton
         :bordered="false"
-        title="Toggle Dark Mode"
+        title="Aktifkan Dark/Light Mode"
         @click="toggleDarkMode"
       >
         <Icon icon="ri:moon-fill" class="size-5 dark:hidden" />
@@ -45,7 +45,7 @@ async function onLogout() {
       </BaseIconButton>
       <VDropdown placement="bottom-end">
         <BaseIconButton
-          title="User Menu"
+          title="Menu Pengguna"
           icon="ri:user-fill"
           :bordered="false"
         />

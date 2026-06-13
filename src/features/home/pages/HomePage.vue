@@ -11,16 +11,23 @@ const cards = ref([]);
 
 const lastNewCard = computed(() => {
   const newCards = cards.value.filter((card) =>
-    card.name.toLowerCase().startsWith('new card'),
+    card.name.toLowerCase().startsWith('kartu'),
   );
 
-  return !newCards.length ? 0 : +newCards[newCards.length - 1].name.slice(9);
+  return !newCards.length ? 0 : +newCards[newCards.length - 1].name.slice(5);
 });
 const chunkCards = computed(() => {
-  const res = Array.from({ length: 4 }, () => []);
+  if (window.innerWidth < 640) {
+    return [cards.value.map((card, index) => ({ index, ...card }))];
+  }
+
+  const length =
+    window.innerWidth < 1024 ? 2 : window.innerWidth < 1280 ? 3 : 4;
+
+  const res = Array.from({ length }, () => []);
 
   cards.value.forEach((card, index) => {
-    res[index % 4].push({
+    res[index % length].push({
       index,
       ...card,
     });
@@ -40,7 +47,7 @@ async function loadCards() {
 async function onNewCard() {
   const card = {
     id: Date.now(),
-    name: `New Card ${lastNewCard.value + 1}`,
+    name: `Kartu ${lastNewCard.value + 1}`,
     wasCreated: true,
   };
 
