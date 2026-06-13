@@ -8,6 +8,14 @@ import { supabase } from '../../../core/supabase';
 import { hideAllPoppers } from 'floating-vue';
 
 const cards = ref([]);
+
+const lastNewCard = computed(() => {
+  const newCards = cards.value.filter((card) =>
+    card.name.toLowerCase().startsWith('new card'),
+  );
+
+  return !newCards.length ? 0 : +newCards[newCards.length - 1].name.slice(9);
+});
 const chunkCards = computed(() => {
   const res = Array.from({ length: 4 }, () => []);
 
@@ -32,7 +40,7 @@ async function loadCards() {
 async function onNewCard() {
   const card = {
     id: Date.now(),
-    name: `New Card ${cards.value.length + 1}`,
+    name: `New Card ${lastNewCard.value + 1}`,
     wasCreated: true,
   };
 
