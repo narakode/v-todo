@@ -90,6 +90,9 @@ async function onRemove(task, index) {
 
   await supabase.from('tasks').delete().eq('id', task.id);
 }
+async function onChangeDone(task) {
+  await supabase.from('tasks').update({ done: task.done }).eq('id', task.id);
+}
 
 loadTasks();
 </script>
@@ -114,7 +117,10 @@ loadTasks();
           ]"
         >
           <div class="flex items-center gap-3 grow">
-            <BaseCheckbox v-model="tasks[index].done" />
+            <BaseCheckbox
+              v-model="tasks[index].done"
+              @change="onChangeDone(task)"
+            />
             <form
               v-if="editTask.index === index"
               id="editForm"
