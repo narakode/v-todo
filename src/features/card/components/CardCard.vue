@@ -169,14 +169,18 @@ if (!card.value.wasCreated) {
                 <div class="flex gap-1 justify-end">
                   <BaseButton
                     color="ghost"
+                    class="dark:hover:bg-neutral-800"
                     size="xs"
+                    dark-surface="dark"
                     :fullwidth="false"
                     v-close-popper
                     >Batal</BaseButton
                   >
                   <BaseButton
                     color="ghost"
+                    class="dark:hover:bg-neutral-800"
                     size="xs"
+                    dark-surface="dark"
                     :fullwidth="false"
                     @click="$emit('delete')"
                     >Hapus</BaseButton

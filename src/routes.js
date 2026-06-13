@@ -5,6 +5,7 @@ export const routes = [
     component: () => import('./features/home/pages/HomePage.vue'),
     meta: {
       auth: true,
+      title: 'Home',
     },
   },
   {
@@ -14,6 +15,7 @@ export const routes = [
     meta: {
       guest: true,
       layout: 'LayoutAuth',
+      title: 'Login',
     },
   },
   {
@@ -23,6 +25,7 @@ export const routes = [
     meta: {
       guest: true,
       layout: 'LayoutAuth',
+      title: 'Register',
     },
   },
 ];
