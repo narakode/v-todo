@@ -57,14 +57,38 @@ async function onCreate() {
 
   newTask.value = null;
 
-  await supabase.from('tasks').insert({
-    name: task.name,
-    card_id: props.card.id,
-  });
+  const { data, error } = await supabase
+    .from('tasks')
+    .insert({
+      name: task.name,
+      card_id: props.card.id,
+    })
+    .select();
+
+  if (!error) {
+    const newTaskIndex = tasks.value.findIndex(
+      (createdTask) => createdTask.id === task.id,
+    );
+
+    tasks.value[newTaskIndex].id = data[0].id;
+  }
 }
-function onSaveEdit() {
-  tasks.value[editTask.index].name = editTask.name;
+async function onSaveEdit() {
+  const newTaskName = editTask.name;
+  const editingTask = tasks.value[editTask.index];
+
+  tasks.value[editTask.index].name = newTaskName;
   editTask.index = null;
+
+  await supabase
+    .from('tasks')
+    .update({ name: newTaskName })
+    .eq('id', editingTask.id);
+}
+async function onRemove(task, index) {
+  tasks.value.splice(index, 1);
+
+  await supabase.from('tasks').delete().eq('id', task.id);
 }
 
 loadTasks();
@@ -136,6 +160,7 @@ loadTasks();
           <button
             v-else
             class="cursor-pointer text-neutral-300 hover:text-red-500 dark:text-neutral-700 dark:hover:text-red-400"
+            @click="onRemove(task, index)"
           >
             <Icon icon="ri:close-fill" class="size-5" />
           </button>
