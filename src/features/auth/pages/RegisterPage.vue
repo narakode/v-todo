@@ -14,6 +14,7 @@ const { register } = useAuth();
 
 const form = reactive({
   email: null,
+  name: null,
   password: null,
 });
 const loading = ref(false);
@@ -49,6 +50,17 @@ async function onSubmit() {
           placeholder="jhon@gmail.com"
           required
           v-model="form.email"
+        />
+      </BaseFormItem>
+
+      <BaseFormItem label="Name" v-slot="id">
+        <BaseInput
+          type="name"
+          name="name"
+          :id="id"
+          placeholder="Jhon doe"
+          required
+          v-model="form.name"
         />
       </BaseFormItem>
 

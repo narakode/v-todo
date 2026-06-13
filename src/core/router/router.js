@@ -10,5 +10,10 @@ const router = createRouter({
 
 router.beforeEach(authGuard);
 router.beforeEach(guestGuard);
+router.afterEach((to) => {
+  const siteTitle = import.meta.env.VITE_SITE_TITLE;
+
+  document.title = `${to.meta.title} | ${siteTitle}`;
+});
 
 export { router };

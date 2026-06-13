@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     default: 'primary',
   },
+  darkSurface: {
+    type: String,
+    default: 'black',
+  },
 });
 
 const size = computed(() => {
@@ -28,8 +32,12 @@ const size = computed(() => {
 });
 const color = computed(() => {
   return {
-    ghost:
-      'bg-transparent text-neutral-900 hover:bg-neutral-100 focus:ring-neutral-200 disabled:hover:bg-transparent dark:text-white dark:hover:bg-neutral-800 dark:focus:ring-neutral-700 dark:disabled:hover:bg-transparent',
+    ghost: [
+      'bg-transparent text-neutral-900 hover:bg-neutral-100 focus:ring-neutral-200 disabled:hover:bg-transparent dark:text-white dark:focus:ring-neutral-700 dark:disabled:hover:bg-transparent',
+      props.darkSurface === 'black'
+        ? 'dark:hover:bg-neutral-800'
+        : 'dark:hover:bg-neutral-900',
+    ],
     primary:
       'bg-neutral-900 text-white hover:bg-neutral-800 focus:ring-neutral-900 disabled:hover:bg-neutral-900 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 dark:focus:ring-white dark:focus:ring-offset-neutral-900 dark:disabled:hover:bg-white',
   }[props.color];
