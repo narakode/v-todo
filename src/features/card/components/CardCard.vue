@@ -124,7 +124,9 @@ async function onChangeDone(task) {
   await supabase.from('tasks').update({ done: task.done }).eq('id', task.id);
 }
 
-loadTasks();
+if (!card.value.wasCreated) {
+  loadTasks();
+}
 </script>
 
 <template>

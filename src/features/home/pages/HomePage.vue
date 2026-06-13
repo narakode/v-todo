@@ -30,15 +30,28 @@ async function loadCards() {
 }
 
 async function onNewCard() {
-  const name = `New Card ${cards.value.length + 1}`;
+  const card = {
+    id: Date.now(),
+    name: `New Card ${cards.value.length + 1}`,
+    wasCreated: true,
+  };
 
-  cards.value.push({
-    name,
-  });
+  cards.value.push(card);
 
-  const { data, error } = await supabase.from('cards').insert({
-    name,
-  });
+  const { data, error } = await supabase
+    .from('cards')
+    .insert({
+      name: card.name,
+    })
+    .select();
+
+  if (!error) {
+    const createdIndex = cards.value.findIndex(
+      (createdCard) => createdCard.id === card.id,
+    );
+
+    cards.value[createdIndex].id = data[0].id;
+  }
 }
 async function onRemoveCard(task, index) {
   cards.value.splice(index, 1);
