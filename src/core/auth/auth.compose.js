@@ -20,7 +20,7 @@ export function useAuth() {
     if (error) {
       return createError(
         error.code === 'invalid_credentials'
-          ? 'Kombinasi email tidak ditemukan'
+          ? 'Kombinasi email dan password tidak ditemukan'
           : 'Login gagal, coba lagi',
       );
     }

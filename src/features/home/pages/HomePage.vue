@@ -1,168 +1,107 @@
 <script setup>
-import { ref, useTemplateRef, nextTick } from 'vue';
 import { Icon } from '@iconify/vue';
-import { useTodoStore } from '../../../todo.store';
-import { storeToRefs } from 'pinia';
-import BaseCard from '../../../components/base/BaseCard.vue';
 import AppNavbar from '../../../components/app/AppNavbar.vue';
+import { computed, ref } from 'vue';
+import CardCard from '../../card/components/CardCard.vue';
+import BaseState from '../../../components/base/BaseState.vue';
+import { supabase } from '../../../core/supabase';
+import { hideAllPoppers } from 'floating-vue';
 
-const todoStore = useTodoStore();
+const cards = ref([]);
 
-const { todos } = storeToRefs(todoStore);
+const lastNewCard = computed(() => {
+  const newCards = cards.value.filter((card) =>
+    card.name.toLowerCase().startsWith('kartu'),
+  );
 
-const newTodo = ref(null);
-const editingIndex = ref(null);
-const editValue = ref(null);
-const editInput = useTemplateRef('editInput');
-const saveEditButton = useTemplateRef('saveEditButton');
+  return !newCards.length ? 0 : +newCards[newCards.length - 1].name.slice(5);
+});
+const chunkCards = computed(() => {
+  if (window.innerWidth < 640) {
+    return [cards.value.map((card, index) => ({ index, ...card }))];
+  }
 
-function onSave() {
-  todoStore.create(newTodo.value);
+  const length =
+    window.innerWidth < 1024 ? 2 : window.innerWidth < 1280 ? 3 : 4;
 
-  newTodo.value = null;
-}
-function onRemove(index) {
-  todoStore.remove(index);
-}
-async function onOpenEditing(index) {
-  editingIndex.value = index;
-  editValue.value = todos.value[index].name;
+  const res = Array.from({ length }, () => []);
 
-  await nextTick();
+  cards.value.forEach((card, index) => {
+    res[index % length].push({
+      index,
+      ...card,
+    });
+  });
 
-  editInput.value[0].focus();
-}
-function onCloseEditing(e) {
-  if (!saveEditButton.value[0].contains(e.target)) {
-    editingIndex.value = false;
+  return res;
+});
+
+async function loadCards() {
+  const { data, error } = await supabase.from('cards').select();
+
+  if (!error) {
+    cards.value = data;
   }
 }
-function onSaveEdit() {
-  todos.value[editingIndex.value].name = editValue.value;
-  editingIndex.value = null;
+
+async function onNewCard() {
+  const card = {
+    id: Date.now(),
+    name: `Kartu ${lastNewCard.value + 1}`,
+    wasCreated: true,
+  };
+
+  cards.value.push(card);
+
+  const { data, error } = await supabase
+    .from('cards')
+    .insert({
+      name: card.name,
+    })
+    .select();
+
+  if (!error) {
+    const createdIndex = cards.value.findIndex(
+      (createdCard) => createdCard.id === card.id,
+    );
+
+    cards.value[createdIndex].id = data[0].id;
+  }
 }
+async function onRemoveCard(task, index) {
+  cards.value.splice(index, 1);
+
+  hideAllPoppers();
+
+  await supabase.from('cards').delete().eq('id', task.id);
+}
+
+loadCards();
 </script>
 
 <template>
   <div class="py-4 space-y-6">
-    <AppNavbar />
-    <div class="h-full flex items-center sm:py-10 lg:py-20">
-      <BaseCard class="max-w-md w-full mx-auto" paddless>
-        <div
-          class="p-6 space-y-1 border-b border-neutral-100 dark:border-neutral-800"
-        >
-          <p
-            class="text-xs text-neutral-400 font-semibold tracking-wider uppercase dark:text-neutral-500"
-          >
-            Activities
-          </p>
-          <h1 class="font-bold text-2xl tracking-tight">Todo</h1>
-        </div>
-        <div
-          v-if="!todos.length"
-          class="p-4 text-center min-h-80 flex flex-col justify-center items-center gap-4"
-        >
-          <div
-            class="w-18 h-18 bg-neutral-50 rounded-full flex items-center justify-center dark:bg-neutral-800"
-          >
-            <Icon
-              icon="ri:checkbox-circle-line"
-              class="size-10 text-neutral-300 dark:text-neutral-600"
-            />
-          </div>
-          <div class="max-w-[200px]">
-            <h2 class="text-lg font-semibold text-neutral-900 dark:text-white">
-              All Done
-            </h2>
-            <p class="text-neutral-400 leading-relaxed dark:text-neutral-500">
-              No tasks for today, add some tasks below.
-            </p>
-          </div>
-        </div>
-        <div v-else class="p-4 space-y-1">
-          <div
-            v-for="(todo, index) of todos"
-            :key="todo.id"
-            :class="[
-              'p-3 rounded-xl transition flex items-center justify-between gap-3 transition',
-              todo.done ? 'bg-neutral-50/50 dark:bg-neutral-800/50' : '',
-            ]"
-          >
-            <div class="flex items-center gap-3 grow">
-              <label class="relative flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  class="appearance-none w-5 h-5 border-2 border-neutral-300 rounded-full peer transition cursor-pointer checked:bg-neutral-300 dark:border-neutral-600 dark:checked:bg-neutral-600"
-                  v-model="todos[index].done"
-                />
-                <Icon
-                  icon="ri:check-fill"
-                  class="hidden absolute top-1 left-1 size-3 text-white peer-checked:block dark:text-neutral-900"
-                />
-              </label>
-              <form
-                v-if="editingIndex === index"
-                id="editForm"
-                class="grow"
-                @submit.prevent="onSaveEdit"
-              >
-                <input
-                  ref="editInput"
-                  :class="[
-                    'w-full border-b border-neutral-300 pb-0.5 text-[1.05rem] focus:outline-none dark:border-neutral-700',
-                    todo.done
-                      ? 'text-neutral-400 dark:text-neutral-600'
-                      : 'text-neutral-700 dark:text-white',
-                  ]"
-                  required
-                  v-model="editValue"
-                  v-click-outside="onCloseEditing"
-                />
-              </form>
-              <p
-                v-else
-                :class="[
-                  'font-medium',
-                  todo.done
-                    ? 'text-neutral-400 line-through dark:text-neutral-600'
-                    : 'text-neutral-700 dark:text-white',
-                ]"
-                @click="onOpenEditing(index)"
-              >
-                {{ todo.name }}
-              </p>
-            </div>
-            <button
-              v-if="editingIndex === index"
-              ref="saveEditButton"
-              class="cursor-pointer text-blue-500 dark:text-blue-400"
-              type="submit"
-              form="editForm"
-            >
-              <Icon icon="ri:check-fill" class="size-5" />
-            </button>
-            <button
-              v-else
-              class="cursor-pointer text-neutral-300 hover:text-red-500 dark:text-neutral-700 dark:hover:text-red-400"
-              @click="onRemove(index)"
-            >
-              <Icon icon="ri:close-fill" class="size-5" />
-            </button>
-          </div>
-        </div>
-        <form
-          class="p-6 border-t border-neutral-100 dark:border-neutral-800"
-          @submit.prevent="onSave"
-        >
-          <input
-            type="text"
-            class="h-13 px-5 w-full border border-transparent rounded-2xl bg-neutral-50 transition placeholder:text-neutral-400 focus:bg-white focus:outline-none focus:border-neutral-300 dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-800 dark:focus:border-neutral-600 dark:text-white"
-            placeholder="Add new activities"
-            required
-            v-model="newTodo"
-          />
-        </form>
-      </BaseCard>
+    <AppNavbar @new-todo="onNewCard" />
+
+    <BaseState
+      v-if="!cards.length"
+      icon="ri:task-line"
+      title="Kartumu Masih Kosong"
+      description="Tambah kartu baru untuk menambahkan aktifitasmu"
+    />
+
+    <div
+      v-else
+      class="grid gap-4 items-start sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
+      <div v-for="(chunk, index) in chunkCards" :key="index" class="space-y-4">
+        <CardCard
+          v-for="(card, index) in chunk"
+          :key="index"
+          v-model="cards[card.index]"
+          @delete="onRemoveCard(card, index)"
+        />
+      </div>
     </div>
   </div>
 </template>
