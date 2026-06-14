@@ -32,7 +32,8 @@ async function loadTasks() {
   const { data, error } = await supabase
     .from('tasks')
     .select()
-    .eq('card_id', card.value.id);
+    .eq('card_id', card.value.id)
+    .order('id', { ascending: true });
 
   if (!error) {
     tasks.value = data;

@@ -37,7 +37,10 @@ const chunkCards = computed(() => {
 });
 
 async function loadCards() {
-  const { data, error } = await supabase.from('cards').select();
+  const { data, error } = await supabase
+    .from('cards')
+    .select()
+    .order('id', { ascending: true });
 
   if (!error) {
     cards.value = data;
