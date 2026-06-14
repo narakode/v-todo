@@ -10,4 +10,9 @@ export default defineConfig([
   },
   pluginVue.configs['flat/essential'],
   { files: ['**/*.json'], plugins: { json }, language: 'json/json' },
+  {
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
 ]);
