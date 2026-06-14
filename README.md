@@ -1,6 +1,6 @@
 # V-Todo
 
-Simple, card-based task management. Try it free at http://v-todo/narakode.id.
+Simple, card-based task management. Try it free at http://v-todo.narakode.id.
 
 ## Features
 
