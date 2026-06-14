@@ -32,7 +32,7 @@ async function onLogout() {
         title="Repository Github"
         icon="ri:github-fill"
         tag="a"
-        href="https://github.com/ibrahimalanshor/v-todo"
+        href="https://github.com/narakode/v-todo"
       />
 
       <BaseIconButton

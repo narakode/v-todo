@@ -13,7 +13,7 @@ import { Icon } from '@iconify/vue';
         icon="ri:github-fill"
         tag="a"
         :bordered="false"
-        href="https://github.com/ibrahimalanshor/v-todo"
+        href="https://github.com/narakode/v-todo"
       />
       <BaseIconButton
         :bordered="false"
