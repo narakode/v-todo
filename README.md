@@ -1,5 +1,13 @@
 # V-Todo
 
-Aplikasi todo berbasis web sederhana yang dibuat dengan Vue.Js. Cek di [https://ibrahimalanshor.github.io/v-todo](https://ibrahimalanshor.github.io/v-todo).
+Simple, card-based task management. Try it free at http://v-todo/narakode.id.
+
+## Features
+
+- Multiple boards
+- Tasks per board
+- Authentication
+
+## Screnshot
 
 ![Shot](./shot.png)
