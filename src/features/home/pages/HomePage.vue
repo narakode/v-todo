@@ -102,7 +102,7 @@ loadCards();
           v-for="(card, index) in chunk"
           :key="index"
           v-model="cards[card.index]"
-          @delete="onRemoveCard(card, index)"
+          @delete="onRemoveCard(card, card.index)"
         />
       </div>
     </div>
