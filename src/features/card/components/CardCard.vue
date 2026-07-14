@@ -28,15 +28,34 @@ const editTask = reactive({
   name: null,
 });
 
-async function loadTasks() {
+async function loadDailyClearTasks() {
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
   const { data, error } = await supabase
     .from('tasks')
     .select()
     .eq('card_id', card.value.id)
+    .or(`done.eq.false,done_at.gte.${startOfToday.toISOString()}`)
     .order('id', { ascending: true });
 
   if (!error) {
     tasks.value = data;
+  }
+}
+async function loadTasks() {
+  if (card.value.clear_daily_done) {
+    loadDailyClearTasks();
+  } else {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select()
+      .eq('card_id', card.value.id)
+      .order('id', { ascending: true });
+
+    if (!error) {
+      tasks.value = data;
+    }
   }
 }
 async function onOpenEditCard() {
