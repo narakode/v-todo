@@ -143,6 +143,12 @@ async function onRemoveTask(task, index) {
 async function onChangeDone(task) {
   await supabase.from('tasks').update({ done: task.done }).eq('id', task.id);
 }
+async function onChangeCardClearDailyDone() {
+  await supabase
+    .from('cards')
+    .update({ clear_daily_done: card.value.clear_daily_done })
+    .eq('id', card.value.id);
+}
 
 if (!card.value.wasCreated) {
   loadTasks();
@@ -179,34 +185,55 @@ if (!card.value.wasCreated) {
           <button
             class="cursor-pointer text-neutral-300 hover:text-red-500 dark:text-neutral-700 dark:hover:text-red-400"
           >
-            <Icon icon="ri:delete-bin-fill" class="size-5" />
+            <Icon icon="ri:more-fill" class="size-5" />
           </button>
-
           <template #popper>
             <div class="p-1.5">
-              <BaseDropdownItem class="space-y-2" :hover="false">
-                <p>Semua task akan ikut terhapus, lanjutkan?</p>
-                <div class="flex gap-1 justify-end">
-                  <BaseButton
-                    color="ghost"
-                    class="dark:hover:bg-neutral-800"
-                    size="xs"
-                    dark-surface="dark"
-                    :fullwidth="false"
-                    v-close-popper
-                    >Batal</BaseButton
-                  >
-                  <BaseButton
-                    color="ghost"
-                    class="dark:hover:bg-neutral-800"
-                    size="xs"
-                    dark-surface="dark"
-                    :fullwidth="false"
-                    @click="$emit('delete')"
-                    >Hapus</BaseButton
-                  >
-                </div>
+              <BaseDropdownItem :hover="false">
+                <BaseCheckbox
+                  v-model="card.clear_daily_done"
+                  @change="onChangeCardClearDailyDone"
+                >
+                  <p>Reset Harian yang selesai</p>
+                </BaseCheckbox>
               </BaseDropdownItem>
+              <VDropdown placement="bottom-end">
+                <BaseDropdownItem class="flex items-center gap-3">
+                  <Icon
+                    icon="ri:delete-bin-fill"
+                    class="size-5 text-neutral-600"
+                  />
+                  Hapus
+                </BaseDropdownItem>
+
+                <template #popper>
+                  <div class="p-1.5">
+                    <BaseDropdownItem class="space-y-2" :hover="false">
+                      <p>Semua task akan ikut terhapus, lanjutkan?</p>
+                      <div class="flex gap-1 justify-end">
+                        <BaseButton
+                          color="ghost"
+                          class="dark:hover:bg-neutral-800"
+                          size="xs"
+                          dark-surface="dark"
+                          :fullwidth="false"
+                          v-close-popper
+                          >Batal</BaseButton
+                        >
+                        <BaseButton
+                          color="ghost"
+                          class="dark:hover:bg-neutral-800"
+                          size="xs"
+                          dark-surface="dark"
+                          :fullwidth="false"
+                          @click="$emit('delete')"
+                          >Hapus</BaseButton
+                        >
+                      </div>
+                    </BaseDropdownItem>
+                  </div>
+                </template>
+              </VDropdown>
             </div>
           </template>
         </VDropdown>
